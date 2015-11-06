@@ -54,7 +54,41 @@ treeHeight :: Tree a -> Int
 treeHeight (Node _ left right) = 1 + (max (treeHeight left) (treeHeight right))
 treeHeight Empty = 0
 
+meanL :: [Float] -> Float 
+meanL x = (sumL x) / (fromIntegral (length x))
+  where 
+    sumL (y:ys) = y + (sumL ys)
+    sumL [] = 0
+
 data Direction = DLeft | DRight | DStraight
   deriving (Show)
 
+data Point = Point Float Float
+  deriving (Show)
+
+pendiente :: Point -> Point -> Float
+pendiente (Point x1 y1) (Point x2 y2) 
+  | (y2-y1) == 0 = 1
+  |otherwise  = (x2-x1)/(y2-y1)
+
+getDirection :: Point -> Point -> Point -> Direction
+getDirection v1 v2 v3
+  | pb > pa = DLeft
+  | pb < pa = DRight
+  | otherwise = DStraight
+  where
+    pa = pendiente v1 v2
+    pb = pendiente v2 v3
+
+--Factorial
+--for(int i = 1; i < n; ++i) {
+--  res *= i;
+--}
+
+factorial 0 = 1
+factorial n = n * (factorial (n-1))
+
+fib 0 = 0
+fib 1 = 1
+fib n = (fib (n-1)) + (fib (n-2))
 
