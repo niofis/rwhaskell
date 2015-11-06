@@ -66,10 +66,8 @@ data Direction = DLeft | DRight | DStraight
 data Point = Point Float Float
   deriving (Show)
 
-pendiente :: Point -> Point -> Float
-pendiente (Point x1 y1) (Point x2 y2) 
-  | (y2-y1) == 0 = 1
-  |otherwise  = (x2-x1)/(y2-y1)
+slope :: Point -> Point -> Float
+slope (Point x1 y1) (Point x2 y2) = (y2-y1)/(x2-x1)
 
 getDirection :: Point -> Point -> Point -> Direction
 getDirection v1 v2 v3
@@ -77,18 +75,21 @@ getDirection v1 v2 v3
   | pb < pa = DRight
   | otherwise = DStraight
   where
-    pa = pendiente v1 v2
-    pb = pendiente v2 v3
+    pa = slope v1 v2
+    pb = slope v2 v3
 
---Factorial
---for(int i = 1; i < n; ++i) {
---  res *= i;
---}
+getDir :: Point -> Point -> Point -> Direction
+getDir (Point x1 y1) (Point x2 y2) (Point x3 y3)
+  | cz > 0 = DLeft
+  | cz < 0 = DRight
+  | otherwise = DStraight
+    where
+      cz = (x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1)
 
-factorial 0 = 1
-factorial n = n * (factorial (n-1))
+getDirections :: [Point] -> [Direction]
+getDirections (x:xs)
+  | (length xs) < 2 = []
+  | otherwise = (getDir x (head xs) (head (tail xs))) : (getDirections xs)
 
-fib 0 = 0
-fib 1 = 1
-fib n = (fib (n-1)) + (fib (n-2))
+sortPoints = [Point] -> [Point]
 
