@@ -91,5 +91,18 @@ getDirections (x:xs)
   | (length xs) < 2 = []
   | otherwise = (getDir x (head xs) (head (tail xs))) : (getDirections xs)
 
-sortPoints = [Point] -> [Point]
+leftMost :: [Point] -> Point
+leftMost xs = head (sortBy compareP xs)
+  where
+    compareP (Point x1 y1) (Point x2 y2)
+      | c == EQ = compare y1 y2
+      | otherwise = c
+        where
+          c = compare x1 y1
+
+slopeSort :: [Point] -> [Point]
+slopeSort xs = sortBy ss xs
+  where
+    ss (Point x1 y1) (Point x2 y2) = compare (y1/x1) (y2/x2) 
+
 
