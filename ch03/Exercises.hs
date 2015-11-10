@@ -91,18 +91,36 @@ getDirections (x:xs)
   | (length xs) < 2 = []
   | otherwise = (getDir x (head xs) (head (tail xs))) : (getDirections xs)
 
-leftMost :: [Point] -> Point
-leftMost xs = head (sortBy compareP xs)
+leftSort :: [Point] -> [Point]
+leftSort xs = sortBy compareP xs
   where
     compareP (Point x1 y1) (Point x2 y2)
-      | c == EQ = compare y1 y2
+      | c == EQ = compare x1 x2
       | otherwise = c
         where
-          c = compare x1 y1
+          c = compare y1 y2
+
 
 slopeSort :: [Point] -> [Point]
 slopeSort xs = sortBy ss xs
   where
     ss (Point x1 y1) (Point x2 y2) = compare (y1/x1) (y2/x2) 
 
-
+convexHull :: [Point] -> [Point]
+convexHull xs = 
+  let lm = leftSort xs
+      leftmost = head lm
+      sortedxs = slopeSort (tail lm)
+    in
+      walkHull [leftmost]  sortedxs
+      where 
+        walkHull hull (y:ys)
+          | (null ys) = y : hull
+          | otherwise =
+            let dir = getDir (head hull) y (head ys) in
+              if dir == DRight then
+                walkHull ((head ys) : hull) (drop 2 ys)
+              else
+                walkHull ([y] ++ [(head ys)] ++ hull) (drop 2 ys) 
+            
+            
